@@ -1,0 +1,84 @@
+=============================================================
+             ENIX BRAND - PLUGIN AUTO-UPDATE TEMPLATE
+=============================================================
+This is your ready-made template. Just follow these 4 steps 
+for any new Enix plugin to add the auto-update system!
+
+-------------------------------------------------------------
+STEP 1: INSTALL THE LIBRARY
+-------------------------------------------------------------
+Open your terminal inside the NEW plugin folder and run:
+
+git clone https://github.com/YahnisElsts/plugin-update-checker.git plugin-update-checker
+Remove-Item -Recurse -Force plugin-update-checker\.git
+
+-------------------------------------------------------------
+STEP 2: ADD THIS PHP CODE TO YOUR MAIN PLUGIN FILE
+-------------------------------------------------------------
+Copy and paste this exactly as it is below your plugin header:
+
+require_once plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+// Change "YOUR-REPO-NAME" and "YOUR-PLUGIN-SLUG" below!
+$enixUpdateChecker = PucFactory::buildUpdateChecker(
+	'https://github.com/ahamedenamul/YOUR-REPO-NAME/',
+	__FILE__,
+	'YOUR-PLUGIN-SLUG'
+);
+
+// Set the stable branch
+$enixUpdateChecker->setBranch( 'main' );
+
+// Optional: Uncomment below if the repo is private
+// $enixUpdateChecker->setAuthentication('your-github-access-token');
+
+-------------------------------------------------------------
+STEP 3: ADD THE GITHUB ACTION FOR AUTO ZIP
+-------------------------------------------------------------
+Create this exact file in your plugin folder: .github/workflows/release.yml
+And paste this code inside it (Change "YOUR-PLUGIN-SLUG"):
+
+name: Create Enix Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create Plugin ZIP
+        run: |
+          mkdir YOUR-PLUGIN-SLUG
+          rsync -rr --exclude='.git/' --exclude='.github/' --exclude='YOUR-PLUGIN-SLUG' ./ YOUR-PLUGIN-SLUG/
+          zip -r YOUR-PLUGIN-SLUG.zip YOUR-PLUGIN-SLUG/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: YOUR-PLUGIN-SLUG.zip
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+-------------------------------------------------------------
+STEP 4: COMMANDS TO RELEASE A NEW VERSION
+-------------------------------------------------------------
+When your code is ready, run these exact commands 
+(just change the version numbers):
+
+git add .
+git commit -m "Version v_1.0.1"
+git tag -a v_1.0.1 -m "Version v_1.0.1"
+git push origin main --tags
+
+=============================================================
+                  DONE! READY FOR ENIX.
+=============================================================
