@@ -15,7 +15,17 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/**
- * Currently plugin does nothing.
- * You can add your basic functions here.
- */
+require_once plugin_dir_path( __FILE__ ) . 'plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$enixUpdateChecker = PucFactory::buildUpdateChecker(
+	'https://github.com/ahamedenamul/enix-updater/',
+	__FILE__,
+	'enix-updater'
+);
+
+// Set the branch that contains the stable release.
+$enixUpdateChecker->setBranch( 'main' );
+
+// Optional: If you change your repository to private, uncomment the line below and add your GitHub access token.
+// $enixUpdateChecker->setAuthentication('your-github-access-token');
