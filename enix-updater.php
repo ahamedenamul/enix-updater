@@ -3,7 +3,7 @@
  * Plugin Name: Enix Updater
  * Plugin URI:  https://example.com/
  * Description: A basic plugin for Enix Updater.
- * Version:     1.0.3
+ * Version:     1.0.4
  * Author:      Enix
  * Author URI:  https://example.com/
  * License:     GPL-2.0+
