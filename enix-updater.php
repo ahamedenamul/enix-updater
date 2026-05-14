@@ -28,4 +28,4 @@ $enixUpdateChecker = PucFactory::buildUpdateChecker(
 $enixUpdateChecker->setBranch( 'main' );
 
 // Optional: If you change your repository to private, uncomment the line below and add your GitHub access token.
-$enixUpdateChecker->setAuthentication('ghp_f3lM2l7jT4yV77F382pC5V8z0l44gP4l30H1');
+// $enixUpdateChecker->setAuthentication('your-github-access-token');
